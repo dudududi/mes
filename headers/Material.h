@@ -6,8 +6,7 @@
 #define MES_MATERIAL_H
 
 
-class Material {
-public:
+struct Material {
     int nh, ne;
     double L, K, S;
     static const int NUMBER_OF_VARS = 5;
