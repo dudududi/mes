@@ -1,8 +1,11 @@
-nh  	3
-ne  	2
-L   	5
-K   	50
-S   	2
-Q       -150
-Alfa    10
-envT    400
+Q                       -150
+Alfa                    10
+envT                    400
+numberOfMaterials       1
+
+
+nh  	                5
+ne  	                4
+L   	                5
+K   	                50
+S   	                2

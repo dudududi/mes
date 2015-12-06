@@ -18,18 +18,25 @@ void FEMGrid::generateFEMGrid(GlobalData *globalData) {
     for (int i = 0; i < globalData->nh; i++){
         nodes->push_back(new Node());
     }
+    int numberOfMaterials = globalData->numberOfMaterials;
 
     //generating elements with previous generated nodes
-    double lengthOfNode = globalData->L / globalData->ne;
-    for (unsigned long i = 0; i<globalData->ne; i++){
-        elements->push_back(new Element(nodes->at(i), nodes->at(i+1), globalData->K, lengthOfNode ,globalData->S));
+    unsigned long idOfNode = 0;
+    for (int i=0; i<numberOfMaterials;i++){
+        Material* currentMaterial = globalData->materials[i];
+        double lengthOfElement = currentMaterial->L/currentMaterial->ne;
+        for (int j = 0; j<currentMaterial->ne; j++){
+            elements->push_back(new Element(nodes->at(idOfNode), nodes->at(idOfNode+1), currentMaterial->K,
+                                            lengthOfElement ,currentMaterial->S));
+            idOfNode++;
+        }
     }
 
     //setting boundary conditions
-    nodes->front()->setBoundaryCondition(new BoundaryCondition(0,globalData->Q*globalData->S));
+    nodes->front()->setBoundaryCondition(new BoundaryCondition(0,globalData->Q*globalData->materials[0]->S));
     nodes->back()->setBoundaryCondition(new BoundaryCondition(
-            globalData->Alfa * globalData->S,
-            -(globalData->Alfa*globalData->envT*globalData->S)));
+            globalData->Alfa * globalData->materials[numberOfMaterials-1]->S,
+            -(globalData->Alfa*globalData->envT*globalData->materials[numberOfMaterials-1]->S)));
 }
 
 FEMGrid::~FEMGrid() {
@@ -48,17 +55,12 @@ FEMGrid::~FEMGrid() {
 void FEMGrid::generateGlobalSE() {
     for(vector<Element*>::iterator element= elements->begin(); element != elements->end(); element++){
         (*element)->calculateLocalMatrixes();
-        cout<<(*(*element)->localMatrixH)<<endl;
-        cout<<(*(*element)->localMatrixP)<<endl;
     }
     for(unsigned long i = 0; i<elements->size(); i++){
         Element* element = elements->at(i);
         globalMatrixH->insertMatrix((int)i ,(int)i , element->localMatrixH);
         globalMatrixP->insertMatrix((int)i, 0, element->localMatrixP);
     }
-    cout<<(*globalMatrixH)<<endl;
-    cout<<(*globalMatrixP)<<endl;
-
 }
 
 

@@ -1,5 +1,5 @@
 //
-// Created by Kamil on 03.12.15.
+// Created by Kamil on 22.11.15.
 //
 
 #include "../headers/Solver.h"

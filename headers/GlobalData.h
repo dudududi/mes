@@ -7,16 +7,20 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include "Material.h"
+
 using namespace std;
 
 class GlobalData {
 private:
-    int nh, ne;
-    double L, K, S, Q, Alfa, envT;
-    int numberOfVars = 8;
+    int nh, ne, numberOfMaterials;
+    double Q, Alfa, envT;
+    int numberOfCommonVars = 4;
+    Material** materials;
 public:
     friend class FEMGrid;
     void loadFromFile(string const location = "input.txt");
+    ~GlobalData();
 };
 
 
