@@ -37,6 +37,9 @@ void FEMGrid::generateFEMGrid(GlobalData *globalData) {
     nodes->back()->setBoundaryCondition(new BoundaryCondition(
             globalData->Alfa * globalData->materials[numberOfMaterials-1]->S,
             -(globalData->Alfa*globalData->envT*globalData->materials[numberOfMaterials-1]->S)));
+
+    dR = (globalData->maxR - globalData->minR)/globalData->ne;
+    //dTau = (dR * dR)/(0.5*) how ???????????????????
 }
 
 FEMGrid::~FEMGrid() {

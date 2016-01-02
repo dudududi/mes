@@ -15,11 +15,16 @@ void GlobalData::loadFromFile(string const location) {
             if (name == "Q") file>>Q;
             else if (name == "Alfa") file>>Alfa;
             else if (name == "envT") file>>envT;
+            else if (name == "beginT") file>>beginT;
             else if (name == "numberOfMaterials") file>>numberOfMaterials;
+            else if(name == "minR") file >> minR;
+            else if (name == "maxR") file >> maxR;
+            else if (name == "maxTau") file >> maxTau;
         }
         materials = new Material* [numberOfMaterials];
         nh=1; //we assuming, that here will be at least one node
         ne = 0;
+        double previousR = minR; //first material begins from R = minR;
         for (int i=0; i<numberOfMaterials; i++){
             materials[i] = new Material();
             for (int j = 0; j< Material::NUMBER_OF_VARS; j++) {
@@ -28,14 +33,20 @@ void GlobalData::loadFromFile(string const location) {
                 if (name == "nh"){
                     file >> materials[i]->nh;
                     nh +=  materials[i]->nh-1;
-                }
-                else if (name == "ne") {
+                } else if (name == "ne") {
                     file >> materials[i]->ne;
                     ne += materials[i]->ne;
+                } else if (name == "R") {
+                    double materialR;
+                    file >> materialR;
+                    materials[i]->R = materialR - previousR;
+                    previousR = materialR;
                 }
                 else if (name == "L") file >> materials[i]->L;
                 else if (name == "K") file >> materials[i]->K;
                 else if (name == "S") file >> materials[i]->S;
+                else if (name == "C") file >> materials[i]->C;
+                else if (name == "ro") file >> materials[i]->ro;
             }
         }
         cout<<"**********************************"<<endl;

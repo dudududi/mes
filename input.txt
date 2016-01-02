@@ -1,11 +1,37 @@
-Q                       -150
-Alfa                    10
-envT                    400
-numberOfMaterials       1
+Q                       -3.1515
+Alfa                    9.5
+envT                    23
+beginT                  33
+numberOfMaterials       4
+minR                    0
+maxR                    10
+maxTau                  25
 
 
-nh  	                5
-ne  	                4
-L   	                5
-K   	                50
-S   	                2
+nh                       41
+ne                       40
+L                        0.12
+K                        1.05
+S                        5
+C                        12.1
+ro                       1.23
+R                        6
+
+
+nh                       51
+ne                       50
+L                        0.12
+K                        0.035
+S                        5
+
+nh                       81
+ne                       80
+L                        0.25
+K                        0.21
+S                        5
+
+nh                       6
+ne                       5
+L                        0.015
+K                        0.57
+S                        5
