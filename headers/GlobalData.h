@@ -12,8 +12,8 @@ using namespace std;
 class GlobalData {
 private:
     int nh, ne;
-    double L, K, S, Q, Alfa, envT;
-    int numberOfVars = 8;
+    double L, K, S, Q, C, ro, Alfa, envT, beginT, minR, maxR, maxTau;
+    int numberOfVars = 12;
 public:
     friend class FEMGrid;
     void loadFromFile(string const location = "input.txt");

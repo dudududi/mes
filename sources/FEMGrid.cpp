@@ -14,22 +14,27 @@ void FEMGrid::generateFEMGrid(GlobalData *globalData) {
     globalMatrixP = new Matrix(globalData->nh, 1);
     result = new Matrix(1, globalData->nh);
 
+    //calculating time-step
+    double a = globalData->K/(globalData->C*globalData->ro);
+    dR = (globalData->maxR - globalData->minR)/globalData->ne;
+    dTau = (dR*dR)/(0.5*a);
+    MAX_TAU_ITERATION = (int)(globalData->maxTau/dTau);
+
     //generating nodes first
+    double interval = (globalData->maxR - globalData->minR) / (globalData->nh-1);
     for (int i = 0; i < globalData->nh; i++){
-        nodes->push_back(new Node());
+        nodes->push_back(new Node(i*interval, globalData->beginT));
     }
 
     //generating elements with previous generated nodes
-    double lengthOfNode = globalData->L / globalData->ne;
     for (unsigned long i = 0; i<globalData->ne; i++){
-        elements->push_back(new Element(nodes->at(i), nodes->at(i+1), globalData->K, lengthOfNode ,globalData->S));
+        elements->push_back(new Element(nodes->at(i), nodes->at(i+1), globalData->K ,globalData->C, globalData->ro, dTau));
     }
 
     //setting boundary conditions
-    nodes->front()->setBoundaryCondition(new BoundaryCondition(0,globalData->Q*globalData->S));
     nodes->back()->setBoundaryCondition(new BoundaryCondition(
-            globalData->Alfa * globalData->S,
-            -(globalData->Alfa*globalData->envT*globalData->S)));
+            2*globalData->Alfa * globalData->maxR,
+            -2*globalData->Alfa*globalData->maxR*globalData->envT));
 }
 
 FEMGrid::~FEMGrid() {
@@ -46,21 +51,25 @@ FEMGrid::~FEMGrid() {
 }
 
 void FEMGrid::generateGlobalSE() {
-    for(vector<Element*>::iterator element= elements->begin(); element != elements->end(); element++){
-        (*element)->calculateLocalMatrixes();
-        cout<<(*(*element)->localMatrixH)<<endl;
-        cout<<(*(*element)->localMatrixP)<<endl;
+    for (int tauIterator=0; tauIterator<MAX_TAU_ITERATION; tauIterator++) {
+        for (vector<Element *>::iterator element = elements->begin(); element != elements->end(); element++) {
+            (*element)->calculateLocalMatrixes(tauIterator);
+            //cout << (*(*element)->localMatrixH) << endl;
+            //cout << (*(*element)->localMatrixP) << endl;
+        }
+        for (unsigned long i = 0; i < elements->size(); i++) {
+            Element *element = elements->at(i);
+            globalMatrixH->insertMatrix((int) i, (int) i, element->localMatrixH);
+            globalMatrixP->insertMatrix((int) i, 0, element->localMatrixP);
+        }
+        solveGlobalSE();
+        for(vector<Node*>::iterator node= nodes->begin(); node != nodes->end(); node++){
+            int i = node - nodes->begin();
+            (*node)->insertTempForNextIteration(result->getValueAt(0, i));
+        }
+        cout<<"tau iteration = "<< tauIterator<< ": " << nodes->at(0)->getTempAtIteration(tauIterator)<<endl;
     }
-    for(unsigned long i = 0; i<elements->size(); i++){
-        Element* element = elements->at(i);
-        globalMatrixH->insertMatrix((int)i ,(int)i , element->localMatrixH);
-        globalMatrixP->insertMatrix((int)i, 0, element->localMatrixP);
-    }
-    cout<<(*globalMatrixH)<<endl;
-    cout<<(*globalMatrixP)<<endl;
-
 }
-
 
 void FEMGrid::solveGlobalSE() {
     Solver::solve(globalMatrixH, globalMatrixP, result);

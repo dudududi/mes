@@ -19,6 +19,8 @@ private:
     Matrix* globalMatrixH;
     Matrix* globalMatrixP;
     Matrix* result;
+    double dTau, dR;
+    int MAX_TAU_ITERATION;
 public:
     FEMGrid();
     void generateFEMGrid(GlobalData* globalData);

@@ -14,12 +14,16 @@ void GlobalData::loadFromFile(string const location) {
             file >> name;
             if (name == "nh") file>>nh;
             else if (name == "ne") file>>ne;
-            else if (name == "L") file>>L;
             else if (name == "K") file>>K;
-            else if (name == "S") file>>S;
             else if (name == "Q") file>>Q;
+            else if (name == "C") file>>C;
+            else if (name == "ro") file>>ro;
             else if (name == "Alfa") file>>Alfa;
             else if (name == "envT") file>>envT;
+            else if (name == "beginT") file>>beginT;
+            else if (name == "minR") file>>minR;
+            else if (name == "maxR") file>>maxR;
+            else if (name == "maxTau") file>>maxTau;
         }
         cout<<"**********************************"<<endl;
         cout<<"nh: " <<"\t"<< nh << endl;
@@ -28,8 +32,14 @@ void GlobalData::loadFromFile(string const location) {
         cout<<"K: " <<"\t"<<"\t"<< K<< endl;
         cout<<"S: " << "\t"<<"\t"<<S<< endl;
         cout<<"Q: " << "\t"<<"\t"<<Q<< endl;
+        cout<<"C: " << "\t"<<"\t"<<C<< endl;
+        cout<<"ro: " <<"\t"<<ro<< endl;
         cout<<"Alfa: "<<"\t"<<Alfa<< endl;
         cout<<"envT: "<<"\t"<< envT<< endl;
+        cout<<"beginT: "<<beginT<< endl;
+        cout<<"minR: " <<"\t"<<minR<< endl;
+        cout<<"maxR: " <<"\t"<<maxR<< endl;
+        cout<<"maxTau: "<<maxTau<< endl;
         cout<<"**********************************"<<endl;
         file.close();
     }
