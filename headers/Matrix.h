@@ -17,6 +17,7 @@ public:
     Matrix(int rows = 2, int columns = 2);
     void setValueAt(int row, int column, double value);
     void addValueAt(int row, int column, double value);
+    double getValueAt(int row, int column);
     ~Matrix();
     friend ostream& operator<<(ostream& os, const Matrix& m);
     void insertMatrix(int row, int column, Matrix* matrix);

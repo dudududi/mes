@@ -14,8 +14,8 @@ using namespace std;
 class GlobalData {
 private:
     int nh, ne, numberOfMaterials;
-    double Q, Alfa, envT, beginT, minR, maxR, maxTau;
-    int numberOfCommonVars = 4;
+    double Alfa, envT, beginT, minR, maxR, maxTau;
+    int numberOfCommonVars = 7;
     Material** materials;
 public:
     friend class FEMGrid;

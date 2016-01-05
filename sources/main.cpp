@@ -7,12 +7,12 @@ using namespace std;
 
 int main() {
     try {
-        GlobalData* globalData = new GlobalData;
+        GlobalData* globalData = new GlobalData();
         globalData->loadFromFile("/home/Kamil/ClionProjects/mes/input.txt");
         FEMGrid* grid = new FEMGrid();
         grid->generateFEMGrid(globalData);
         grid->generateGlobalSE();
-        grid->solveGlobalSE();
+        //grid->solveGlobalSE();
         delete(grid);
         delete(globalData);
         return 0;

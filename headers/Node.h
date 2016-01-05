@@ -6,19 +6,22 @@
 #define MES_NODE_H
 
 #include <iostream>
+#include <vector>
 #include "BoundaryCondition.h"
 
 using namespace std;
 
 class Node {
 private:
-    double t;
+    double beginT, r;
+    vector<double>* tempInTime;
     BoundaryCondition* boundaryCondition;
 public:
     friend class Element;
-    Node();
-    double getValue();
+    Node(double r, double beginT);
     void setBoundaryCondition(BoundaryCondition* boundaryCondition);
+    double getTempAtIteration(int iteration);
+    void insertTempForNextIteration(double value);
     ~Node();
 };
 

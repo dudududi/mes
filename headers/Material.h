@@ -8,8 +8,8 @@
 
 struct Material {
     int nh, ne;
-    double L, K, S, C, ro, R;
-    static const int NUMBER_OF_VARS = 8;
+    double K, C, ro, R;
+    static const int NUMBER_OF_VARS = 6;
 };
 
 

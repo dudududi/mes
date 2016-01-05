@@ -15,31 +15,39 @@ void FEMGrid::generateFEMGrid(GlobalData *globalData) {
     result = new Matrix(1, globalData->nh);
 
     //generating nodes first
+    double interval = (globalData->maxR - globalData->minR) / (globalData->nh-1);
     for (int i = 0; i < globalData->nh; i++){
-        nodes->push_back(new Node());
+        nodes->push_back(new Node(i*interval, globalData->beginT));
     }
+
     int numberOfMaterials = globalData->numberOfMaterials;
+
+    //calculating time-step for all materials
+    double dTau = 0;
+    for (int i=0; i<numberOfMaterials; i++){
+        Material* currentMaterial = globalData->materials[i];
+        double dR = currentMaterial->R/currentMaterial->ne;
+        double a = currentMaterial->K/(currentMaterial->C*currentMaterial->ro);
+        dTau += dR*dR/(0.5*a);
+    }
+    dTau = dTau / numberOfMaterials;
+    MAX_TAU_ITERATION = globalData->maxTau/dTau;
 
     //generating elements with previous generated nodes
     unsigned long idOfNode = 0;
     for (int i=0; i<numberOfMaterials;i++){
         Material* currentMaterial = globalData->materials[i];
-        double lengthOfElement = currentMaterial->L/currentMaterial->ne;
         for (int j = 0; j<currentMaterial->ne; j++){
             elements->push_back(new Element(nodes->at(idOfNode), nodes->at(idOfNode+1), currentMaterial->K,
-                                            lengthOfElement ,currentMaterial->S));
+                                            currentMaterial->C ,currentMaterial->ro, dTau));
             idOfNode++;
         }
     }
 
     //setting boundary conditions
-    nodes->front()->setBoundaryCondition(new BoundaryCondition(0,globalData->Q*globalData->materials[0]->S));
     nodes->back()->setBoundaryCondition(new BoundaryCondition(
-            globalData->Alfa * globalData->materials[numberOfMaterials-1]->S,
-            -(globalData->Alfa*globalData->envT*globalData->materials[numberOfMaterials-1]->S)));
-
-    dR = (globalData->maxR - globalData->minR)/globalData->ne;
-    //dTau = (dR * dR)/(0.5*) how ???????????????????
+            2*globalData->Alfa * globalData->maxR,
+            -2*globalData->Alfa*globalData->maxR*globalData->envT));
 }
 
 FEMGrid::~FEMGrid() {
@@ -56,18 +64,28 @@ FEMGrid::~FEMGrid() {
 }
 
 void FEMGrid::generateGlobalSE() {
-    for(vector<Element*>::iterator element= elements->begin(); element != elements->end(); element++){
-        (*element)->calculateLocalMatrixes();
-    }
-    for(unsigned long i = 0; i<elements->size(); i++){
-        Element* element = elements->at(i);
-        globalMatrixH->insertMatrix((int)i ,(int)i , element->localMatrixH);
-        globalMatrixP->insertMatrix((int)i, 0, element->localMatrixP);
+    for (int tauIterator=0; tauIterator<MAX_TAU_ITERATION; tauIterator++) {
+        for (vector<Element *>::iterator element = elements->begin(); element != elements->end(); element++) {
+            (*element)->calculateLocalMatrixes(tauIterator);
+            //cout << (*(*element)->localMatrixH) << endl;
+            //cout << (*(*element)->localMatrixP) << endl;
+        }
+        for (unsigned long i = 0; i < elements->size(); i++) {
+            Element *element = elements->at(i);
+            globalMatrixH->insertMatrix((int) i, (int) i, element->localMatrixH);
+            globalMatrixP->insertMatrix((int) i, 0, element->localMatrixP);
+        }
+        solveGlobalSE();
+        for(vector<Node*>::iterator node= nodes->begin(); node != nodes->end(); node++){
+            int i = node - nodes->begin();
+            (*node)->insertTempForNextIteration(result->getValueAt(0, i));
+        }
+        cout<<"tau iteration = "<< tauIterator<< ": " << nodes->at(0)->getTempAtIteration(tauIterator)<<endl;
     }
 }
 
 
 void FEMGrid::solveGlobalSE() {
     Solver::solve(globalMatrixH, globalMatrixP, result);
-    cout<<*result;
+    //cout<<*result;
 }

@@ -19,7 +19,7 @@ private:
     Matrix* globalMatrixH;
     Matrix* globalMatrixP;
     Matrix* result;
-    double dTau, dR;
+    double MAX_TAU_ITERATION;
 public:
     FEMGrid();
     void generateFEMGrid(GlobalData* globalData);

@@ -51,3 +51,7 @@ void Matrix::insertMatrix(int row, int column, Matrix *matrix) {
         }
     }
 }
+
+double Matrix::getValueAt(int row, int column) {
+    return matrix[row][column];
+}
