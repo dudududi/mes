@@ -8,7 +8,7 @@ using namespace std;
 int main() {
     try {
         GlobalData *globalData = new GlobalData();
-        globalData->loadFromFile("");
+        globalData->loadFromFile();
         FEMGrid *grid = new FEMGrid();
         grid->generateFEMGrid(globalData);
         grid->generateAndSolveGlobalSE();
