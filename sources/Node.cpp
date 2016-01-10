@@ -3,6 +3,7 @@
 //
 
 #include "../headers/Node.h"
+
 Node::Node(double r, double beginT) {
     boundaryCondition = NULL;
     this->r = r;
@@ -10,7 +11,7 @@ Node::Node(double r, double beginT) {
     tempInTime = new vector<double>();
 }
 
-void Node::setBoundaryCondition(BoundaryCondition* boundaryCondition ) {
+void Node::setBoundaryCondition(BoundaryCondition *boundaryCondition) {
     this->boundaryCondition = boundaryCondition;
 }
 
@@ -22,7 +23,7 @@ Node::~Node() {
 
 double Node::getTempAtIteration(int iteration) {
     if (iteration == -1) return beginT;
-    else return tempInTime->at((unsigned)iteration);
+    else return tempInTime->at((unsigned) iteration);
 }
 
 void Node::insertTempForNextIteration(double value) {

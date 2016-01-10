@@ -7,22 +7,22 @@
 Matrix::Matrix(int rows, int columns) {
     this->rows = rows;
     this->columns = columns;
-    matrix = new double*[rows];
-    for (int i = 0; i < rows; i++){
-        matrix[i]=new double[columns];
+    matrix = new double *[rows];
+    for (int i = 0; i < rows; i++) {
+        matrix[i] = new double[columns];
     }
-    for (int i = 0; i<rows; i++){
-        for (int j = 0; j< columns; j++){
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
             matrix[i][j] = 0;
         }
     }
 }
 
 Matrix::~Matrix() {
-    for (int i =0; i<rows; i++){
+    for (int i = 0; i < rows; i++) {
         delete[] matrix[i];
     }
-    delete [] matrix;
+    delete[] matrix;
 }
 
 void Matrix::setValueAt(int row, int column, double value) {
@@ -34,24 +34,32 @@ void Matrix::addValueAt(int row, int column, double value) {
 }
 
 ostream &operator<<(ostream &os, const Matrix &m) {
-    for (int i = 0; i<m.rows; i++){
-        for (int j = 0; j<m.columns; j++){
-            os<<m.matrix[i][j]<<"\t\t";
+    for (int i = 0; i < m.rows; i++) {
+        for (int j = 0; j < m.columns; j++) {
+            os << setiosflags(ios::fixed) << setprecision(2) << setw(12) << m.matrix[i][j];
         }
-        os<<endl;
+        os << endl;
     }
     return os;
 }
 
 
 void Matrix::insertMatrix(int row, int column, Matrix *matrix) {
-    for (int i = 0; i<matrix->rows; i++){
-        for (int j = 0; j<matrix->columns; j++){
-            this->matrix[row+i][column+j]+=matrix->matrix[i][j];
+    for (int i = 0; i < matrix->rows; i++) {
+        for (int j = 0; j < matrix->columns; j++) {
+            this->matrix[row + i][column + j] += matrix->matrix[i][j];
         }
     }
 }
 
 double Matrix::getValueAt(int row, int column) {
     return matrix[row][column];
+}
+
+void Matrix::operator=(double value) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            matrix[i][j] = value;
+        }
+    }
 }

@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <string>
+
 using namespace std;
 
 
@@ -15,6 +16,7 @@ private:
     string message;
 public:
     Exception(string message);
+
     string getMessage();
 };
 

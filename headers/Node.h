@@ -14,14 +14,19 @@ using namespace std;
 class Node {
 private:
     double beginT, r;
-    vector<double>* tempInTime;
-    BoundaryCondition* boundaryCondition;
+    vector<double> *tempInTime;
+    BoundaryCondition *boundaryCondition;
 public:
     friend class Element;
+
     Node(double r, double beginT);
-    void setBoundaryCondition(BoundaryCondition* boundaryCondition);
+
+    void setBoundaryCondition(BoundaryCondition *boundaryCondition);
+
     double getTempAtIteration(int iteration);
+
     void insertTempForNextIteration(double value);
+
     ~Node();
 };
 

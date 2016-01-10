@@ -1,9 +1,9 @@
 Alfa                    300
-envT                    200
+envT                    1200
 beginT                  100
 numberOfMaterials       1
 minR                    0
-maxR                    0.08
+maxR                    0.05
 maxTau                  1000
 
 nh                       9

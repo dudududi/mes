@@ -10,9 +10,10 @@
 
 class Solver {
 public:
-    static void solve(Matrix* matrixH, Matrix* vectorP, Matrix* result);
+    static void solve(Matrix *matrixH, Matrix *vectorP, Matrix *result);
+
 private:
-    static void solveUsingGauss(Matrix* joinedMatrix, Matrix* result);
+    static void solveUsingGauss(Matrix *joinedMatrix, Matrix *result);
 };
 
 

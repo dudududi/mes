@@ -7,17 +7,16 @@ using namespace std;
 
 int main() {
     try {
-        GlobalData* globalData = new GlobalData();
-        globalData->loadFromFile("/home/Kamil/ClionProjects/mes/input.txt");
-        FEMGrid* grid = new FEMGrid();
+        GlobalData *globalData = new GlobalData();
+        globalData->loadFromFile();
+        FEMGrid *grid = new FEMGrid();
         grid->generateFEMGrid(globalData);
-        grid->generateGlobalSE();
-        //grid->solveGlobalSE();
-        delete(grid);
-        delete(globalData);
+        grid->generateAndSolveGlobalSE();
+        delete (grid);
+        delete (globalData);
         return 0;
-    } catch (Exception e){
-        cout<<e.getMessage();
+    } catch (Exception e) {
+        cout << e.getMessage();
         return 1;
     }
 }

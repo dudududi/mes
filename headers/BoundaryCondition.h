@@ -11,7 +11,9 @@ private:
     double parameterDependent = 0, parameterIndependent = 0;
 public:
     BoundaryCondition(double parameterDependent, double parameterIndependent);
+
     double getParameterDependentPart();
+
     double getParameterIndependentPart();
 };
 
