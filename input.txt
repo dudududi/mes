@@ -1,9 +1,9 @@
 Alfa                    300
 envT                    1200
 beginT                  100
-numberOfMaterials       1
+numberOfMaterials       5
 minR                    0
-maxR                    0.05
+maxR                    0.16
 maxTau                  1000
 
 nh                       9
@@ -11,4 +11,32 @@ ne                       8
 K                        25
 C                        700
 ro                       7800
-R                        0.05
+R                        0.04
+
+nh                       5
+ne                       4
+K                        0.025
+C                        1005
+ro                       0.5925
+R                        0.02
+
+nh                       9
+ne                       8
+K                        25
+C                        700
+ro                       7800
+R                        0.04
+
+nh                       5
+ne                       4
+K                        0.025
+C                        1005
+ro                       0.5925
+R                        0.02
+
+nh                       9
+ne                       8
+K                        25
+C                        700
+ro                       7800
+R                        0.04

@@ -14,17 +14,19 @@ void FEMGrid::generateFEMGrid(GlobalData *globalData) {
     globalMatrixP = new Matrix(globalData->nh, 1);
     result = new Matrix(1, globalData->nh);
 
-    //generating nodes first
-    double interval = (globalData->maxR - globalData->minR) / (globalData->nh - 1);
-    for (int i = 0; i < globalData->nh; i++) {
-        nodes->push_back(new Node(i * interval, globalData->beginT));
-    }
-
     int numberOfMaterials = globalData->numberOfMaterials;
 
     //calculating time-step for all materials
+    double currentR = globalData->minR;
     for (int i = 0; i < numberOfMaterials; i++) {
         Material *currentMaterial = globalData->materials[i];
+        //generating nodes first
+        double interval = currentMaterial->R / (currentMaterial->nh - 1);
+        for (int j = 0; j < currentMaterial->nh; j++) {
+            if (i != 0 && j == 0) continue; //first node of 1st material and last node od 2nd material are the same!
+            nodes->push_back(new Node(currentR + interval * j, globalData->beginT));
+        }
+        currentR += currentMaterial->R;
         double dR = currentMaterial->R / currentMaterial->ne;
         double a = currentMaterial->K / (currentMaterial->C * currentMaterial->ro);
         dTau += dR * dR / (0.5 * a);
@@ -93,7 +95,7 @@ void FEMGrid::generateAndSolveGlobalSE() {
             int i = node - nodes->begin();
             (*node)->insertTempForNextIteration(result->getValueAt(0, i));
         }
-        (*output) << setiosflags(ios::fixed) << setprecision(2) << setw(12) << (tauIterator+1)*dTau << (*result);
+        (*output) << setiosflags(ios::fixed) << setprecision(2) << setw(12) << (tauIterator + 1) * dTau << (*result);
         (*result) = 0;
         (*globalMatrixH) = 0;
         (*globalMatrixP) = 0;

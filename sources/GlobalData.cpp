@@ -35,12 +35,8 @@ void GlobalData::loadFromFile(string const location) {
                 } else if (name == "ne") {
                     file >> materials[i]->ne;
                     ne += materials[i]->ne;
-                } else if (name == "R") {
-                    double materialR;
-                    file >> materialR;
-                    materials[i]->R = materialR - previousR;
-                    previousR = materialR;
                 }
+                else if (name == "R") file >> materials[i]->R;
                 else if (name == "K") file >> materials[i]->K;
                 else if (name == "C") file >> materials[i]->C;
                 else if (name == "ro") file >> materials[i]->ro;
